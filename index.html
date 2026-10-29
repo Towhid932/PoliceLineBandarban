@@ -6,7 +6,7 @@
     <title>পুলিশ লাইন বান্দরবান - পুলিশ লাইন ফোর্স ম্যানেজমেন্ট সিস্টেম</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bengali Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +33,6 @@
             font-family: 'Hind Siliguri', sans-serif;
             background-color: #f8fafc;
         }
-        /* Custom scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -45,10 +44,7 @@
             background: #94a3b8;
             border-radius: 4px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-        /* Mandatory A4 Print Specifications */
+        /* Mandatory A4 Page Print Margins: Top/Left 1.0", Right/Bottom 0.5" */
         @page {
             size: A4;
             margin-top: 1.0in;
@@ -59,7 +55,7 @@
         @media print {
             .no-print { display: none !important; }
             .print-only { display: block !important; }
-            body { background: white !important; color: black !important; font-size: 11pt; }
+            body { background: white !important; color: black !important; font-size: 10pt; }
             .print-document {
                 width: 100% !important;
                 margin: 0 !important;
@@ -68,7 +64,7 @@
             }
         }
         .slide-fade-enter {
-            animation: fadeIn 0.35s ease-in-out;
+            animation: fadeIn 0.3s ease-in-out;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
@@ -97,7 +93,7 @@
                 </div>
             </div>
 
-            <!-- Profile Badge & Logout Button -->
+            <!-- Profile Badge & Logout -->
             <div id="userProfileBar" class="flex items-center gap-3 bg-policelight/70 px-3 py-1.5 rounded-lg border border-white/10">
                 <div class="text-right">
                     <div class="text-xs md:text-sm font-semibold text-white flex items-center justify-end gap-1.5">
@@ -107,7 +103,7 @@
                     <div class="text-[11px] text-slate-300" id="userIdDisplay">BP: --</div>
                 </div>
                 
-                <!-- Notification Bell Indicator for View ID & Admins -->
+                <!-- Notification Bell Indicator -->
                 <button id="notificationBtn" onclick="switchTab('notifications')" class="relative p-1.5 text-slate-200 hover:text-amber-300 transition">
                     <i class="fa-solid fa-bell text-lg"></i>
                     <span id="notificationBadge" class="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
@@ -120,19 +116,18 @@
             </div>
         </div>
         
-        <!-- Navigation Menu Tabs -->
+        <!-- Dynamic Navigation Menu -->
         <nav class="bg-slate-900 border-t border-white/10 overflow-x-auto no-scrollbar">
             <div class="max-w-7xl mx-auto px-2 flex space-x-1 space-x-reverse text-xs font-medium py-1" id="navTabsContainer">
-                <!-- Tabs inserted dynamically based on user role -->
+                <!-- Populated dynamically -->
             </div>
         </nav>
     </header>
 
-    <!-- PRE-LOGIN LANDING SCREEN -->
+    <!-- PRE-LOGIN LANDING SCREEN WITH NOTICE SLIDER -->
     <div id="preLoginView" class="flex-1 flex flex-col justify-between bg-slate-950 text-white relative overflow-hidden min-h-screen">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-policeblue/60 via-slate-900 to-slate-950 -z-10"></div>
         
-        <!-- Landing Top Bar -->
         <div class="p-4 flex justify-between items-center max-w-7xl mx-auto w-full z-10">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center text-amber-400 text-xl font-bold shadow-lg">
@@ -155,18 +150,17 @@
             </div>
         </div>
 
-        <!-- Carousel Active Notice Slideshow Container -->
+        <!-- Fullscreen Notice Slider Container -->
         <div class="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full text-center relative z-10 my-auto">
             <div id="noticeSliderCard" class="w-full bg-slate-900/80 backdrop-blur-md border border-amber-500/30 rounded-2xl p-6 md:p-8 shadow-2xl relative transition-all duration-500">
                 <span class="inline-block bg-amber-500/20 text-amber-300 text-xs font-semibold px-3 py-1 rounded-full border border-amber-500/40 mb-3 animate-pulse">
-                    <i class="fa-solid fa-bell mr-1"></i> সাম্প্রতিক জরুরি নোটিশ
+                    <i class="fa-solid fa-bell mr-1"></i> জরুরি নোটিশ স্লাইডার
                 </span>
                 
                 <div id="noticeSlideContent" class="min-h-[140px] flex flex-col justify-center items-center">
                     <!-- Dynamic Slide Output -->
                 </div>
 
-                <!-- Slide Navigation Dots & Controls -->
                 <div class="flex items-center justify-between mt-5 pt-3 border-t border-slate-800">
                     <button onclick="prevNoticeSlide()" class="text-slate-400 hover:text-white px-3 py-1 rounded hover:bg-slate-800 transition">
                         <i class="fa-solid fa-chevron-left text-base"></i>
@@ -179,21 +173,20 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <footer class="bg-slate-950 border-t border-slate-800/80 py-3 text-center text-xs text-slate-400 z-10">
             <p>পুলিশ লাইন বান্দরবান © ২০২৬ | জেলা পুলিশ, বান্দরবান</p>
             <p class="mt-0.5 text-slate-500">ডেভেলপার: <span class="text-amber-400 font-medium">মোঃ তৌহিদুল ইসলাম, মোবাইল-০১৬৪১৬৬৩৫৯৬</span></p>
         </footer>
     </div>
 
-    <!-- MAIN DASHBOARD CONTAINER -->
+    <!-- MAIN DASHBOARD WORKSPACE -->
     <main id="dashboardView" class="flex-1 max-w-7xl w-full mx-auto p-3 md:p-5 hidden">
         <div id="tabContentContainer" class="slide-fade-enter">
             <!-- Dynamic workspace tabs rendered here -->
         </div>
     </main>
 
-    <!-- LOGGED IN FOOTER -->
+    <!-- FOOTER -->
     <footer id="mainFooter" class="bg-slate-900 text-slate-400 border-t border-slate-800 py-2.5 text-center text-xs hidden no-print">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-1.5">
             <p>পুলিশ লাইন ফোর্স ম্যানেজমেন্ট সিস্টেম | বান্দরবান</p>
@@ -247,7 +240,7 @@
             </form>
 
             <div class="mt-4 pt-3 border-t border-slate-800 text-[11px] text-slate-400 space-y-1">
-                <p class="font-semibold text-amber-400">ডেমো আইডি ক্রডেনশিয়ালস:</p>
+                <p class="font-semibold text-amber-400">ডেমো আইডি অ্যাকাউন্টস:</p>
                 <div class="grid grid-cols-2 gap-1 text-[10px] text-slate-300">
                     <span class="hover:text-amber-300 cursor-pointer" onclick="fillDemo('BP9818229921','t12345')"><b>Admin 1:</b> BP9818229921</span>
                     <span class="hover:text-amber-300 cursor-pointer" onclick="fillDemo('BP9818229922','t12345')"><b>Admin 2:</b> BP9818229922</span>
@@ -275,13 +268,13 @@
                     <thead>
                         <tr class="bg-slate-100 text-slate-700 border-b">
                             <th class="p-2 border">ক্রম</th>
-                            <th class="p-2 border">প্রকাশের তারিখ + দাখিলকারী</th>
+                            <th class="p-2 border">প্রকাশের তারিখ ও সময় + দাখিলকারী</th>
                             <th class="p-2 border">মেয়াদকাল (শুরু - শেষ)</th>
                             <th class="p-2 border">বিবরণ</th>
                         </tr>
                     </thead>
                     <tbody id="publicNoticesTableBody">
-                        <!-- Populated dynamically -->
+                        <!-- Dynamic notices -->
                     </tbody>
                 </table>
             </div>
@@ -466,7 +459,7 @@
         </div>
     </div>
 
-    <!-- LEAVE ENTRY MODAL -->
+    <!-- LEAVE ENTRY MODAL WITH DATE AND TIME -->
     <div id="leaveModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden text-slate-800">
             <div class="bg-policeblue text-white p-3.5 flex justify-between items-center">
@@ -500,7 +493,7 @@
                     </select>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-3 gap-2">
                     <div>
                         <label class="block font-semibold mb-1">দিন সংখ্যা</label>
                         <input type="number" id="leaveDays" min="1" value="1" required class="w-full border rounded p-2">
@@ -508,6 +501,10 @@
                     <div>
                         <label class="block font-semibold mb-1">প্রস্থান তারিখ</label>
                         <input type="date" id="leaveStartDate" required class="w-full border rounded p-2">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">প্রস্থান সময়</label>
+                        <input type="time" id="leaveStartTime" required class="w-full border rounded p-2">
                     </div>
                 </div>
 
@@ -521,19 +518,25 @@
         </div>
     </div>
 
-    <!-- RETURN / HAJIR MODAL -->
+    <!-- RETURN / HAJIR MODAL WITH DATE AND TIME -->
     <div id="returnModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden text-slate-800">
             <div class="bg-policeblue text-white p-3 flex justify-between items-center">
-                <h3 class="text-xs font-bold text-amber-400">হাজিরের তারিখ প্রদান</h3>
+                <h3 class="text-xs font-bold text-amber-400">হাজিরের তারিখ ও সময় প্রদান</h3>
                 <button onclick="closeModal('returnModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="returnForm" onsubmit="processReturnSubmit(event)" class="p-4 space-y-3 text-xs">
                 <input type="hidden" id="returnTargetType">
                 <input type="hidden" id="returnRecordId">
-                <div>
-                    <label class="block font-semibold mb-1">হাজির হওয়ার তারিখ</label>
-                    <input type="date" id="returnDateInput" required class="w-full border rounded p-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-semibold mb-1">হাজির হওয়ার তারিখ</label>
+                        <input type="date" id="returnDateInput" required class="w-full border rounded p-2">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">হাজির হওয়ার সময়</label>
+                        <input type="time" id="returnTimeInput" required class="w-full border rounded p-2">
+                    </div>
                 </div>
                 <div class="flex justify-end gap-2 pt-2">
                     <button type="button" onclick="closeModal('returnModal')" class="bg-slate-400 text-white px-3 py-1 rounded">বাতিল</button>
@@ -566,7 +569,7 @@
                 <div>
                     <label class="block font-semibold mb-1">ডিউটি স্থল</label>
                     <select id="dutyLocationSelect" required class="w-full border rounded p-2">
-                        <!-- Populated dynamically -->
+                        <!-- Dynamic options -->
                     </select>
                 </div>
 
@@ -618,7 +621,7 @@
         </div>
     </div>
 
-    <!-- EDIT FIELD MODAL (APPROVAL SUBMISSION) -->
+    <!-- EDIT FIELD MODAL (APPROVAL WORKFLOW) -->
     <div id="editFieldModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden text-slate-800">
             <div class="bg-policeblue text-white p-3 flex justify-between items-center">
@@ -632,7 +635,7 @@
                 <div>
                     <label class="block font-semibold mb-1" id="editFieldLabel">নতুন মান দিন</label>
                     <div id="editFieldInputContainer">
-                        <!-- Filled dynamically -->
+                        <!-- Dynamic inputs -->
                     </div>
                 </div>
 
@@ -675,36 +678,34 @@
                 </div>
 
                 <div class="text-[11px] text-slate-500 font-medium">
-                    পেপার সাইজ: A4 | মার্জিন: টপ ও লেফট ১.০ ইঞ্চি, রাইট ও বটম ০.৫ ইঞ্চি
+                    পেপার: A4 | মার্জিন: টপ ও লেফট ১.০ ইঞ্চি, রাইট ও বটম ০.৫ ইঞ্চি
                 </div>
             </div>
 
             <div id="dutyPrintDocument" class="p-8 overflow-y-auto flex-1 text-slate-900 bg-white print-document">
-                <!-- Dynamically generated print report -->
+                <!-- Dynamically generated print document -->
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
-        // GLOBAL STORAGE KEYS
         const DB_KEYS = {
-            USERS: 'plb_users_v3',
-            FORCE: 'plb_force_v3',
-            TRANSFERS: 'plb_transfers_v3',
-            GUARDS: 'plb_guards_v3',
-            LEAVES: 'plb_leaves_v3',
-            DUTIES: 'plb_duties_v3',
-            DUTY_PLACES: 'plb_places_v3',
-            NOTICES: 'plb_notices_v3',
-            NOTICE_RECYCLE: 'plb_notice_recycle_v3',
-            RECYCLE: 'plb_recycle_v3',
-            APPROVALS: 'plb_approvals_v3',
-            NOTIFICATIONS: 'plb_notifications_v3',
-            LOGS: 'plb_logs_v3'
+            USERS: 'plb_users_v4',
+            FORCE: 'plb_force_v4',
+            TRANSFERS: 'plb_transfers_v4',
+            GUARDS: 'plb_guards_v4',
+            LEAVES: 'plb_leaves_v4',
+            DUTIES: 'plb_duties_v4',
+            DUTY_PLACES: 'plb_places_v4',
+            NOTICES: 'plb_notices_v4',
+            NOTICE_RECYCLE: 'plb_notice_recycle_v4',
+            RECYCLE: 'plb_recycle_v4',
+            APPROVALS: 'plb_approvals_v4',
+            NOTIFICATIONS: 'plb_notifications_v4',
+            LOGS: 'plb_logs_v4'
         };
 
-        // Strict Default Users Alignment
         const DEFAULT_USERS = [
             { id: 'BP9818229921', pass: 't12345', name: 'মোজাম্মেল হক', role: 'ADMIN' },
             { id: 'BP9818229922', pass: 't12345', name: 'তানভীর', role: 'ADMIN' },
@@ -713,7 +714,6 @@
             { id: 'BP0020229922', pass: 't12345', name: 'আরআই, বান্দরবান', role: 'VIEW' }
         ];
 
-        // Districts list
         const BANGLADESH_DISTRICTS = [
             "বান্দরবান", "রাঙ্গামাটি", "খাগড়াছড়ি", "চট্টগ্রাম", "কক্সবাজার", "কুমিল্লা", "ফেনী", "ব্রাহ্মণবাড়িয়া", "নোয়াখালী", "লক্ষ্মীপুর", "চাঁদপুর",
             "ঢাকা", "গাজীপুর", "নারায়ণগঞ্জ", "টাঙ্গাইল", "কিশোরগঞ্জ", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নরসিংদী", "ফরিদপুর", "মাদারীপুর", "গোপালগঞ্জ", "রাজবাড়ী", "শরীয়তপুর",
@@ -736,7 +736,7 @@
         ];
 
         const GUARD_OPTIONS = [
-            "জেলা জজ মহোদয়ের বাসভবন", "জেলা প্রশাসক মহোদয়ের বাসভবন", "পুলিশ সুপারের বাসভবন", "অতিঃ পুলিশ সুপারের বাসভবন", 
+            "জেলা জজ মহোদয়ের বাংলো", "জেলা প্রশাসক মহোদয়ের বাংলো", "পুলিশ সুপারের বাংলো", "অতিঃ পুলিশ সুপারের বাংলো", 
             "জেলা পরিষদ চেয়ারম্যান বাংলো গার্ড", "সোনালী ব্যাংক গার্ড", "ডিএসবি গার্ড", "ট্রেজারী গার্ড", "৩৩ কেবি গার্ড", 
             "উপর টিএন্ডটি গার্ড", "নীচ টিএন্ডটি গার্ড", "ইসকন মন্দির গার্ড", "মালখানা গার্ড", "স্বর্ণ মন্দির গার্ড", 
             "বেতার গার্ড", "সিআইডি গার্ড", "নতুন অফিসার মেস গার্ড", "ম্যাগজিন গার্ড", "এলপি গার্ড", "রুমা এসবি গার্ড"
@@ -747,7 +747,7 @@
             "বারবার", "প্লাম্বার", "ইলেকট্রিশিয়ান", "মুন্সি+অপারেটর", "রিগুলার", "আরআই", "মেজর", "ফোর্স সুবেদার"
         ];
 
-        // App States
+        // State variables
         let currentUser = null;
         let activeTab = 'allForce';
         let currentNoticeIndex = 0;
@@ -770,7 +770,6 @@
             logs: []
         };
 
-        // ON LOAD INITIALIZER
         window.onload = function() {
             loadInitialData();
             populateDistrictDropdowns();
@@ -803,8 +802,8 @@
             ]);
 
             state.notices = getOrSeed(DB_KEYS.NOTICES, [
-                { id: 1, startDate: '2026-02-01', endDate: '2026-12-31', description: 'সকল ফোর্স সদস্যদের নির্ধারিত সময়ে প্যারেডে অংশগ্রহণ নিশ্চিত করার নির্দেশ প্রদান করা হলো।', date: '2026-02-01', uploader: 'মোজাম্মেল হক (BP9818229921)' },
-                { id: 2, startDate: '2026-02-15', endDate: '2026-11-30', description: 'জরুরি ডিউটি সংক্রান্ত মাস্টার রোল তথ্য হালনাগাদ করা হচ্ছে।', date: '2026-02-15', uploader: 'মোঃ তৌহিদুল ইসলাম (BP9920229921)' }
+                { id: 1, startDate: '2026-02-01', endDate: '2026-12-31', description: 'সকল ফোর্স সদস্যদের নির্ধারিত সময়ে প্যারেডে অংশগ্রহণ নিশ্চিত করার নির্দেশ প্রদান করা হলো।', date: '2026-02-01', dateTime: '01/02/2026 09:30 AM', uploader: 'মোজাম্মেল হক (BP9818229921)' },
+                { id: 2, startDate: '2026-02-15', endDate: '2026-11-30', description: 'জরুরি ডিউটি সংক্রান্ত মাস্টার রোল তথ্য হালনাগাদ করা হচ্ছে।', date: '2026-02-15', dateTime: '15/02/2026 11:15 AM', uploader: 'মোঃ তৌহিদুল ইসলাম (BP9920229921)' }
             ]);
 
             state.dutyPlaces = getOrSeed(DB_KEYS.DUTY_PLACES, ["প্রধান ফটক", "কন্ট্রোল রুম", "অস্ত্রাগার পাহারা", "মেস ডিউটি", "ক্যাম্প টহল"]);
@@ -873,7 +872,7 @@
             });
         }
 
-        // SLIDER FOR PUBLIC NOTICES
+        // PUBLIC NOTICE SLIDER
         function startNoticeSlider() {
             if (noticeSliderTimer) clearInterval(noticeSliderTimer);
             noticeSliderTimer = setInterval(() => {
@@ -943,7 +942,7 @@
                 <tr class="hover:bg-slate-50 border-b">
                     <td class="p-2 border text-center font-bold">${toBengaliNumerals(idx + 1)}</td>
                     <td class="p-2 border">
-                        <div class="font-semibold text-slate-800">${formatBnDate(n.date)}</div>
+                        <div class="font-semibold text-slate-800">${n.dateTime || formatBnDate(n.date)}</div>
                         <div class="text-xs text-slate-500">${escapeHtml(n.uploader)}</div>
                     </td>
                     <td class="p-2 border whitespace-nowrap text-xs">
@@ -960,7 +959,7 @@
             document.getElementById('allNoticesModal').classList.add('hidden');
         }
 
-        // LOGIN / LOGOUT
+        // AUTHENTICATION
         function openLoginModal() {
             document.getElementById('loginModal').classList.remove('hidden');
         }
@@ -1022,7 +1021,7 @@
             document.getElementById('preLoginView').classList.remove('hidden');
         }
 
-        // ROLE BASED DASHBOARD RENDER
+        // DASHBOARD CONTROL
         function setupUserDashboard() {
             document.getElementById('preLoginView').classList.add('hidden');
             document.getElementById('mainHeader').classList.remove('hidden');
@@ -1036,7 +1035,6 @@
             updateNotificationBadge();
             renderNavigationTabs();
 
-            // Default initial tab assignment
             if (currentUser.role === 'VIEW') {
                 switchTab('stats');
             } else {
@@ -1075,13 +1073,14 @@
             } else if (currentUser.role === 'VIEW') {
                 tabs = [
                     { id: 'stats', label: '১. পরিসংখ্যান', icon: 'fa-chart-pie' },
-                    { id: 'duty', label: '২. ডিউটি', icon: 'fa-user-clock' },
-                    { id: 'allForce', label: '৩. অল ফোর্স', icon: 'fa-users' },
-                    { id: 'transfers', label: '৪. বদলি/প্রেষণ', icon: 'fa-right-left' },
-                    { id: 'guardDuty', label: '৫. গার্ড ডিউটি', icon: 'fa-shield-halved' },
-                    { id: 'leave', label: '৬. ছুটি', icon: 'fa-plane-departure' },
-                    { id: 'notifications', label: '৭. নোটিফিকেশন', icon: 'fa-bell' },
-                    { id: 'approvals', label: '৮. এপ্রুভ ট্যাব', icon: 'fa-circle-check' }
+                    { id: 'notice', label: '২. নোটিশ', icon: 'fa-bullhorn' },
+                    { id: 'duty', label: '৩. ডিউটি', icon: 'fa-user-clock' },
+                    { id: 'allForce', label: '৪. অল ফোর্স', icon: 'fa-users' },
+                    { id: 'transfers', label: '৫. বদলি/প্রেষণ', icon: 'fa-right-left' },
+                    { id: 'guardDuty', label: '৬. গার্ড ডিউটি', icon: 'fa-shield-halved' },
+                    { id: 'leave', label: '৭. ছুটি', icon: 'fa-plane-departure' },
+                    { id: 'notifications', label: '৮. নোটিফিকেশন', icon: 'fa-bell' },
+                    { id: 'approvals', label: '৯. এপ্রুভ ট্যাব', icon: 'fa-circle-check' }
                 ];
             }
 
@@ -1199,7 +1198,7 @@
                                 <i class="fa-solid fa-file-excel"></i> Excel Download
                             </button>
                             <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded font-medium flex items-center gap-1">
-                                <i class="fa-solid fa-print"></i> প্রিন্ট
+                                <i class="fa-solid fa-print"></i> প্রিন্ট/পিডিএফ
                             </button>
                             ${!isReadonly ? `
                             <button onclick="openModal('forceAddModal')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3.5 py-1.5 rounded flex items-center gap-1 shadow">
@@ -1209,9 +1208,15 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end text-xs text-slate-600 gap-2 items-center">
-                        <span class="font-semibold"><i class="fa-solid fa-eye-slash"></i> কলাম হাইড/আনহাইড:</span>
-                        <div class="inline-flex gap-2 bg-slate-200 p-1 rounded text-[11px]">
+                    <div class="flex flex-wrap justify-end text-xs text-slate-600 gap-2 items-center">
+                        <span class="font-semibold"><i class="fa-solid fa-eye-slash"></i> কলাম হাইড/আনহাইড (SL, BP, RANK, NAME, ACTION ব্যতীত):</span>
+                        <div class="inline-flex flex-wrap gap-2 bg-slate-200 p-1 rounded text-[11px]">
+                            <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(3, this.checked)"> BRASH NO</label>
+                            <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(5, this.checked)"> GENDER</label>
+                            <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(6, this.checked)"> SAF</label>
+                            <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(7, this.checked)"> JOINING POLICE</label>
+                            <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(8, this.checked)"> JOINING BANDARBAN</label>
+                            <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(9, this.checked)"> MOBILE</label>
                             <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(10, this.checked)"> DISTRICT</label>
                             <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(11, this.checked)"> SPOUSE INFO</label>
                             <label class="cursor-pointer"><input type="checkbox" checked onclick="toggleColumnVisibility(12, this.checked)"> REMARK</label>
@@ -1225,13 +1230,13 @@
                                     <th class="p-2 border border-slate-700">SL</th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('allForceTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('allForceTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700">BRASH NO</th>
+                                    <th class="p-2 border border-slate-700 col-target-3">BRASH NO</th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('allForceTable', 4)">NAME <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700">GENDER</th>
-                                    <th class="p-2 border border-slate-700">SAF</th>
-                                    <th class="p-2 border border-slate-700">JOINING POLICE</th>
-                                    <th class="p-2 border border-slate-700">JOINING BANDARBAN</th>
-                                    <th class="p-2 border border-slate-700">MOBILE</th>
+                                    <th class="p-2 border border-slate-700 col-target-5">GENDER</th>
+                                    <th class="p-2 border border-slate-700 col-target-6">SAF</th>
+                                    <th class="p-2 border border-slate-700 col-target-7">JOINING POLICE</th>
+                                    <th class="p-2 border border-slate-700 col-target-8">JOINING BANDARBAN</th>
+                                    <th class="p-2 border border-slate-700 col-target-9">MOBILE</th>
                                     <th class="p-2 border border-slate-700 col-target-10">DISTRICT</th>
                                     <th class="p-2 border border-slate-700 col-target-11">SPOUSE INFO</th>
                                     <th class="p-2 border border-slate-700 col-target-12">REMARK</th>
@@ -1269,16 +1274,16 @@
                         <td class="p-2 border font-bold text-center">${toBengaliNumerals(idx + 1)}</td>
                         <td class="p-2 border font-mono font-bold text-policeblue">${escapeHtml(f.bp)}</td>
                         <td class="p-2 border font-medium">${escapeHtml(f.rank)}</td>
-                        <td class="p-2 border">${f.brashNo || '-'}</td>
+                        <td class="p-2 border col-target-3">${f.brashNo || '-'}</td>
                         <td class="p-2 border font-semibold">${escapeHtml(f.name)}</td>
-                        <td class="p-2 border">${escapeHtml(f.gender)}</td>
-                        <td class="p-2 border">
+                        <td class="p-2 border col-target-5">${escapeHtml(f.gender)}</td>
+                        <td class="p-2 border col-target-6">
                             <span>${escapeHtml(f.saf)}</span>
                             ${!isReadonly && (f.edits.saf || 0) < 2 ? `<button onclick="openFieldEditModal('${f.bp}', 'saf')" class="ml-1 text-blue-600 text-[10px]"><i class="fa-solid fa-pen"></i></button>` : ''}
                         </td>
-                        <td class="p-2 border">${formatBnDate(f.joiningPolice)}</td>
-                        <td class="p-2 border">${formatBnDate(f.joiningBandarban)}</td>
-                        <td class="p-2 border font-mono">${escapeHtml(f.mobile)}</td>
+                        <td class="p-2 border col-target-7">${formatBnDate(f.joiningPolice)}</td>
+                        <td class="p-2 border col-target-8">${formatBnDate(f.joiningBandarban)}</td>
+                        <td class="p-2 border font-mono col-target-9">${escapeHtml(f.mobile)}</td>
                         <td class="p-2 border col-target-10">${escapeHtml(f.district)}</td>
                         <td class="p-2 border col-target-11">
                             <span>${escapeHtml(f.spouseInfo || '-')}</span>
@@ -1354,7 +1359,6 @@
             e.preventDefault();
             const bp = document.getElementById('addBp').value.trim().toUpperCase();
 
-            // Strict BP Format
             if (bp.length !== 12 || !bp.startsWith("BP")) {
                 alert("BP নম্বর অবশ্যই 'BP' দিয়ে শুরু এবং মোট ১২ ডিজিটের হতে হবে!");
                 return;
@@ -1500,7 +1504,7 @@
             });
         }
 
-        // SUBMIT FIELD EDIT TO VIEW APPROVAL TAB
+        // FIELD EDIT MODAL (APPROVAL SUBMISSION)
         function openFieldEditModal(bp, field) {
             const member = state.force.find(f => f.bp === bp);
             if (!member) return;
@@ -1746,7 +1750,7 @@
             }
         }
 
-        // TAB 4: LEAVE
+        // TAB 4: LEAVE WITH TIME STAMPING
         function renderLeaveTab(container) {
             const today = new Date().toISOString().split('T')[0];
             const isReadonly = currentUser.role !== 'ADMIN';
@@ -1783,7 +1787,7 @@
                             </select>
 
                             ${!isReadonly ? `
-                            <button onclick="openModal('leaveModal')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1.5 rounded flex items-center gap-1 shadow">
+                            <button onclick="openLeaveModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1.5 rounded flex items-center gap-1 shadow">
                                 <i class="fa-solid fa-plus"></i> ছুটি গমন
                             </button>
                             ` : ''}
@@ -1800,9 +1804,9 @@
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 3)">NAME <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700">ছুটির ধরন</th>
                                     <th class="p-2 border border-slate-700">দিন</th>
-                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 6)">প্রস্থান তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 6)">প্রস্থান তারিখ ও সময় <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 7)">শেষ তারিখ <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 8)">হাজির তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 8)">হাজির তারিখ ও সময় <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 9)">Status <i class="fa-solid fa-sort"></i></th>
                                     ${!isReadonly ? `<th class="p-2 border border-slate-700 text-center no-print">Action</th>` : ''}
                                 </tr>
@@ -1845,9 +1849,9 @@
                         <td class="p-2 border font-semibold">${escapeHtml(l.name)}</td>
                         <td class="p-2 border font-medium text-indigo-700">${escapeHtml(l.type)}</td>
                         <td class="p-2 border font-bold text-center">${toBengaliNumerals(l.days)}</td>
-                        <td class="p-2 border">${formatBnDate(l.startDate)}</td>
+                        <td class="p-2 border">${formatBnDate(l.startDate)} <span class="text-slate-500 font-mono text-[10px]">${l.startTime || ''}</span></td>
                         <td class="p-2 border font-semibold text-amber-800">${formatBnDate(endDate)}</td>
-                        <td class="p-2 border font-medium">${l.returnDate ? formatBnDate(l.returnDate) : '-'}</td>
+                        <td class="p-2 border font-medium">${l.returnDate ? `${formatBnDate(l.returnDate)} <span class="text-slate-500 font-mono text-[10px]">${l.returnTime || ''}</span>` : '-'}</td>
                         <td class="p-2 border">
                             <span class="px-2 py-0.5 rounded text-[11px] font-bold ${status === 'হাজির' ? 'bg-emerald-100 text-emerald-800' : status === 'অতিবাস' ? 'bg-red-100 text-red-800 animate-pulse' : 'bg-amber-100 text-amber-800'}">
                                 ${status}
@@ -1883,6 +1887,17 @@
             });
         }
 
+        function openLeaveModal() {
+            document.getElementById('leaveBp').value = '';
+            document.getElementById('leaveRank').textContent = '--';
+            document.getElementById('leaveBrash').textContent = '--';
+            document.getElementById('leaveName').textContent = '--';
+            document.getElementById('leaveStartDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('leaveStartTime').value = '09:00';
+            document.getElementById('leaveError').classList.add('hidden');
+            openModal('leaveModal');
+        }
+
         function fetchForceInfoForLeave(bp) {
             const err = document.getElementById('leaveError');
             err.classList.add('hidden');
@@ -1896,7 +1911,7 @@
 
                     const activeLeave = state.leaves.find(l => l.bp === f.bp && l.status !== 'হাজির');
                     if (activeLeave) {
-                        err.textContent = `উক্ত বিপি নম্বরধারী বর্তমানে ছুটিতে অথবা অতিবাসে রয়েছেন!`;
+                        err.textContent = `উক্ত বিপি নম্বরধারী বর্তমানে ছুটিরত অথবা অতিবাসে রয়েছেন!`;
                         err.classList.remove('hidden');
                     }
                 } else {
@@ -1912,6 +1927,7 @@
         function saveLeaveEntry(e) {
             e.preventDefault();
             const bp = document.getElementById('leaveBp').value.trim().toUpperCase();
+            const newStartDate = document.getElementById('leaveStartDate').value;
             const f = state.force.find(x => x.bp === bp);
 
             if (!f) {
@@ -1919,9 +1935,16 @@
                 return;
             }
 
-            const activeLeave = state.leaves.find(l => l.bp === bp && l.status !== 'হাজির');
-            if (activeLeave) {
-                alert("উক্ত বিপি নম্বরধারী ইতোমধ্যে ছুটিতে বা অতিবাসে রয়েছেন, সেভ করা যাবে না!");
+            // Validation: Cannot add if active leave or if date falls inside existing leave history range
+            const hasConflict = state.leaves.some(l => {
+                if (l.bp !== bp) return false;
+                if (l.status !== 'হাজির') return true; // Active leave or overstay
+                const endDate = addDaysToDate(l.startDate, l.days);
+                return (newStartDate >= l.startDate && newStartDate <= (l.returnDate || endDate));
+            });
+
+            if (hasConflict) {
+                alert("উক্ত বিপি নম্বরধারীর নতুন ছুটি গমনের তারিখটি পূর্বের ছুটির সময়সীমা অথবা বর্তমান ছুটির মধ্যে পড়ে, সেভ করা সম্ভব নয়!");
                 return;
             }
 
@@ -1933,8 +1956,10 @@
                 name: f.name,
                 type: document.getElementById('leaveType').value,
                 days: parseInt(document.getElementById('leaveDays').value),
-                startDate: document.getElementById('leaveStartDate').value,
+                startDate: newStartDate,
+                startTime: document.getElementById('leaveStartTime').value,
                 returnDate: '',
+                returnTime: '',
                 status: 'ছুটিতে'
             };
 
@@ -2012,7 +2037,6 @@
                     return isUnitEligible && !isOnLeave && !isGuardWorking && !isDeputation && !isOnDuty;
                 });
 
-                // Police Lines first, Reserve office last
                 eligibleMembers.sort((a, b) => {
                     if (a.unit === 'পুলিশ লাইন' && b.unit !== 'পুলিশ লাইন') return -1;
                     if (a.unit !== 'পুলিশ লাইন' && b.unit === 'পুলিশ লাইন') return 1;
@@ -2258,7 +2282,7 @@
                     const isOnDuty = state.duties.some(d => d.bp === f.bp && d.status === 'ডিউটিতে');
 
                     if (isOnLeave) {
-                        err.textContent = "উক্ত বিপি নম্বরধারী বর্তমানে ছুটিতে বা অতিবাসে রয়েছেন!";
+                        err.textContent = "উক্ত বিপি নম্বরধারী বর্তমানে ছুটিরত বা অতিবাসে রয়েছেন!";
                         err.classList.remove('hidden');
                     } else if (isGuardWorking) {
                         err.textContent = "উক্ত বিপি নম্বরধারী বর্তমানে গার্ড ডিউটিতে নিয়োজিত!";
@@ -2364,6 +2388,7 @@
             document.getElementById('returnTargetType').value = targetType;
             document.getElementById('returnRecordId').value = recordId;
             document.getElementById('returnDateInput').value = new Date().toISOString().split('T')[0];
+            document.getElementById('returnTimeInput').value = '17:00';
             openModal('returnModal');
         }
 
@@ -2372,12 +2397,14 @@
             const targetType = document.getElementById('returnTargetType').value;
             const recordId = document.getElementById('returnRecordId').value;
             const returnDate = document.getElementById('returnDateInput').value;
+            const returnTime = document.getElementById('returnTimeInput').value;
 
             showLoading("হাজির আপডেট করা হচ্ছে...", () => {
                 if (targetType === 'LEAVE') {
                     const l = state.leaves.find(x => x.id == recordId);
                     if (l) {
                         l.returnDate = returnDate;
+                        l.returnTime = returnTime;
                         l.status = 'হাজির';
                         const f = state.force.find(x => x.bp === l.bp);
                         if (f) f.dutyLeaveStatus = 'কর্মরত';
@@ -2403,10 +2430,10 @@
             });
         }
 
-        // TAB 6: NOTICE TAB (WITH ADD & NOTICE RECYCLE BIN SUB-TABS)
+        // TAB 6: NOTICE TAB (STRICT DELETION VALIDATION)
         let activeNoticeSubTab = 'addNotice';
         function renderNoticeTab(container) {
-            const canAdd = currentUser.role === 'ADMIN' || currentUser.role === 'SUPER_ADMIN';
+            const canAdd = true; // All IDs can add notices
 
             container.innerHTML = `
                 <div class="space-y-4">
@@ -2429,7 +2456,7 @@
                 </div>
             `;
 
-            if (activeNoticeSubTab === 'addNotice' && canAdd) {
+            if (activeNoticeSubTab === 'addNotice') {
                 const startDate = document.getElementById('noticeStartDate');
                 if (startDate) {
                     startDate.value = new Date().toISOString().split('T')[0];
@@ -2448,7 +2475,6 @@
 
             return `
                 <div class="space-y-4">
-                    ${canAdd ? `
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                         <h4 class="text-xs md:text-sm font-bold text-slate-800 mb-3">নতুন নোটিশ ফরম</h4>
                         <form onsubmit="saveNotice(event)" class="space-y-3 text-xs">
@@ -2473,7 +2499,6 @@
                             </div>
                         </form>
                     </div>
-                    ` : ''}
 
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                         <h4 class="font-bold text-slate-800 text-xs md:text-sm mb-3">পূর্বের সকল নোটিশ</h4>
@@ -2481,14 +2506,14 @@
                             ${state.notices.length === 0 ? `<p class="text-slate-400 text-xs text-center py-4">কোন নোটিশ প্রকাশিত নেই</p>` : 
                             state.notices.map(n => {
                                 const isPublisher = n.uploader.includes(currentUser.id);
-                                const isNotExpired = today <= n.endDate;
-                                const canDelete = (isPublisher && isNotExpired) || currentUser.role === 'SUPER_ADMIN';
+                                const isExpiredOrToday = today >= n.endDate; // Cannot delete if endDate > today unless Super Admin
+                                const canDelete = (isPublisher && isExpiredOrToday) || currentUser.role === 'SUPER_ADMIN';
 
                                 return `
                                     <div class="bg-slate-50 border rounded-lg p-3 flex justify-between items-start text-xs">
                                         <div class="space-y-1">
                                             <div class="flex items-center gap-2 text-slate-500 text-[11px] flex-wrap">
-                                                <span class="font-bold text-policeblue">${formatBnDate(n.date)}</span>
+                                                <span class="font-bold text-policeblue">${n.dateTime || formatBnDate(n.date)}</span>
                                                 <span>•</span>
                                                 <span>মেয়াদ: ${formatBnDate(n.startDate)} হতে ${formatBnDate(n.endDate)}</span>
                                                 <span>•</span>
@@ -2500,7 +2525,7 @@
                                         <button onclick="deleteNotice(${n.id})" class="text-red-600 hover:text-red-800 font-bold p-1 ml-2" title="ডিলিট করুন">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
-                                        ` : ''}
+                                        ` : `<span class="text-[10px] text-slate-400 italic font-semibold" title="মেয়াদ শেষ না হওয়া পর্যন্ত ডিলিট করা যাবে না">লকড</span>`}
                                     </div>
                                 `;
                             }).join('')}
@@ -2517,7 +2542,7 @@
                         <thead>
                             <tr class="bg-slate-800 text-white">
                                 <th class="p-2 border border-slate-700">SL</th>
-                                <th class="p-2 border border-slate-700">প্রকাশের তারিখ + দাখিলকারী</th>
+                                <th class="p-2 border border-slate-700">প্রকাশের তারিখ ও সময় + দাখিলকারী</th>
                                 <th class="p-2 border border-slate-700">বিবরণ</th>
                                 <th class="p-2 border border-slate-700 text-red-400">ডিলিটের সময় ও ব্যবহারকারী ID</th>
                             </tr>
@@ -2528,7 +2553,7 @@
                                 <tr class="hover:bg-slate-50 border-b">
                                     <td class="p-2 border text-center font-bold">${toBengaliNumerals(idx + 1)}</td>
                                     <td class="p-2 border">
-                                        <div class="font-semibold">${formatBnDate(nr.date)}</div>
+                                        <div class="font-semibold">${nr.dateTime || formatBnDate(nr.date)}</div>
                                         <div class="text-[11px] text-slate-500">${escapeHtml(nr.uploader)}</div>
                                     </td>
                                     <td class="p-2 border font-medium">${escapeHtml(nr.description)}</td>
@@ -2545,12 +2570,15 @@
 
         function saveNotice(e) {
             e.preventDefault();
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
             const notice = {
                 id: Date.now(),
                 startDate: document.getElementById('noticeStartDate').value,
                 endDate: document.getElementById('noticeEndDate').value,
                 description: document.getElementById('noticeDesc').value.trim(),
-                date: new Date().toISOString().split('T')[0],
+                date: now.toISOString().split('T')[0],
+                dateTime: `${formatBnDate(now.toISOString().split('T')[0])} ${timeStr}`,
                 uploader: `${currentUser.name} (${currentUser.id})`
             };
 
@@ -2802,7 +2830,7 @@
             `;
         }
 
-        // TAB 9: NOTIFICATION TAB (VIEW ID ROLE)
+        // TAB 9: NOTIFICATION TAB
         function renderNotificationsTab(container) {
             state.notifications.forEach(n => n.read = true);
             saveState(DB_KEYS.NOTIFICATIONS);
@@ -3009,7 +3037,7 @@
             });
         }
 
-        // TAB 12: USER LIST TAB (SUPER ADMIN RESTRICTED PIN ACCESS)
+        // TAB 12: USER LIST TAB (SUPER ADMIN PIN RESTRICTED)
         function renderUserListTab(container) {
             if (!isUserListUnlocked) {
                 container.innerHTML = `
@@ -3167,7 +3195,7 @@
             });
         }
 
-        // DUTY PDF PRINT / REPORT GENERATION ENGINE
+        // DUTY PDF PRINT / REPORT GENERATION
         function openDutySummaryPrint() {
             document.getElementById('printFilterDate').value = new Date().toISOString().split('T')[0];
             
@@ -3214,7 +3242,6 @@
                 }
             }
 
-            // Group by Duty Location
             const grouped = {};
             filtered.forEach(d => {
                 if (!grouped[d.place]) grouped[d.place] = [];
@@ -3285,7 +3312,7 @@
             container.innerHTML = html;
         }
 
-        // COMMON HELPER FUNCTIONS
+        // UTILITY FUNCTIONS
         function showLoading(text, callback) {
             const overlay = document.getElementById('loadingOverlay');
             document.getElementById('loadingText').textContent = text || 'প্রসেসিং হচ্ছে...';
