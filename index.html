@@ -44,7 +44,6 @@
             background: #94a3b8;
             border-radius: 4px;
         }
-        /* Mandatory A4 Page Print Margins: Top/Left 1.0", Right/Bottom 0.5" */
         @page {
             size: A4;
             margin-top: 1.0in;
@@ -193,8 +192,6 @@
             <p class="text-slate-300">ডেভেলপার: <span class="text-amber-400 font-medium">মোঃ তৌহিদুল ইসলাম, মোবাইল-০১৬৪১৬৬৩৫৯৬</span></p>
         </div>
     </footer>
-
-    <!-- MODAL DIALOGS -->
 
     <!-- LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -677,6 +674,22 @@
         </div>
     </div>
 
+    <!-- SAF/OR/LOR SUMMARY REPORT MODAL -->
+    <div id="safSummaryModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="bg-policeblue text-white p-3.5 flex justify-between items-center no-print">
+                <h3 id="safModalTitle" class="text-sm font-bold text-amber-400"><i class="fa-solid fa-chart-bar mr-1"></i> ক্যাটাগরি ভিত্তিক ইউনিট ও র‍্যাংক পরিসংখ্যান</h3>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded text-xs hover:bg-amber-400"><i class="fa-solid fa-print"></i> প্রিন্ট/পিডিএফ</button>
+                    <button onclick="closeModal('safSummaryModal')" class="text-slate-300 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div id="safSummaryPrintDoc" class="p-8 overflow-y-auto flex-1 text-slate-900 bg-white print-document">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
         const DB_KEYS = {
@@ -704,13 +717,14 @@
         ];
 
         const BANGLADESH_DISTRICTS = [
-            "বান্দরবান", "রাঙ্গামাটি", "খাগড়াছড়ি", "চট্টগ্রাম", "কক্সবাজার", "কুমিল্লা", "ফেনী", "ব্রাহ্মণবাড়িয়া", "নোয়াখালী", "লক্ষ্মীপুর", "চাঁদপুর",
-            "ঢাকা", "গাজীপুর", "নারায়ণগঞ্জ", "টাঙ্গাইল", "কিশোরগঞ্জ", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নরসিংদী", "ফরিদপুর", "মাদারীপুর", "গোপালগঞ্জ", "রাজবাড়ী", "শরীয়তপুর",
-            "ময়মনসিংহ", "জামালপুর", "নেত্রকোণা", "শেরপুর", "সিলেট", "মৌলভীবাজার", "হবিগঞ্জ", "সুনামগঞ্জ",
-            "রাজশাহী", "বগুড়া", "পাবনা", "সিরাজগঞ্জ", "নওগাঁ", "নাটোর", "জয়পুরহাট", "চাঁপাইনবাবগঞ্জ",
-            "রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও",
-            "খুলনা", "যশোর", "সাতক্ষীরা", "ঝিনাইদহ", "বাগেরহাট", "কুষ্টিয়া", "চুয়াডাঙ্গা", "মেহেরপুর", "নড়াইল", "মাগুরা",
-            "বরিশাল", "পটুয়াখালী", "ভোলা", "পিরোজপুর", "বরগুনা", "ঝালকাঠি"
+            "ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সীগঞ্জ", "নারায়ণগঞ্জ", "নরসিংদী", "রাজবাড়ী", "শরীয়তপুর", "টাঙ্গাইল",
+            "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "চট্টগ্রাম", "কক্সবাজার", "কুমিল্লা", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি",
+            "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "খুলনা", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা",
+            "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "চাঁপাইনবাবগঞ্জ", "পাবনা", "রাজশাহী", "সিরাজগঞ্জ",
+            "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "রংপুর", "ঠাকুরগাঁও",
+            "বরগুনা", "বরিশাল", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর",
+            "হবিগঞ্জ", "মৌলভীবাজার", "সুনামগঞ্জ", "সিলেট",
+            "জামালপুর", "ময়মনসিংহ", "নেত্রকোণা", "শেরপুর"
         ];
 
         const INTERNAL_UNITS = [
@@ -736,7 +750,6 @@
             "বারবার", "প্লাম্বার", "ইলেকট্রিশিয়ান", "মুন্সি+অপারেটর", "রিগুলার", "আরআই", "মেজর", "ফোর্স সুবেদার"
         ];
 
-        // State variables
         let currentUser = null;
         let activeTab = 'allForce';
         let currentNoticeIndex = 0;
@@ -782,13 +795,25 @@
 
             state.users = getOrSeed(DB_KEYS.USERS, DEFAULT_USERS);
 
-            state.force = getOrSeed(DB_KEYS.FORCE, [
+            const initialForceSeed = [
                 { bp: 'BP9818229921', rank: 'ইন্সপেক্টর (নিরস্ত্র)', brashNo: '1001', name: 'মোজাম্মেল হক', gender: 'পুরুষ', saf: 'SAF', joiningPolice: '2015-02-10', joiningBandarban: '2022-01-15', mobile: '01711112233', district: 'বান্দরবান', spouseInfo: 'গৃহিণী', remark: 'বিশেষ দায়িত্বে', designation: 'আরআই', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
                 { bp: 'BP9818229922', rank: 'এসআই (সশস্ত্র)', brashNo: '1002', name: 'তানভীর', gender: 'পুরুষ', saf: 'SAF', joiningPolice: '2017-05-12', joiningBandarban: '2023-03-01', mobile: '01822223344', district: 'চট্টগ্রাম', spouseInfo: 'শিক্ষিকা', remark: '', designation: 'রিগুলার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
                 { bp: 'BP9920229921', rank: 'ইন্সপেক্টর (সশস্ত্র)', brashNo: '1003', name: 'মোঃ তৌহিদুল ইসলাম', gender: 'পুরুষ', saf: 'SAF', joiningPolice: '2012-08-20', joiningBandarban: '2021-06-10', mobile: '01641663596', district: 'কুমিল্লা', spouseInfo: 'ডাক্তার', remark: 'মেজর অফিসার', designation: 'মেজর', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'মেজর অফিস', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
                 { bp: 'BP0020229921', rank: 'কনস্টেবল', brashNo: '4012', name: 'মোঃ ফখরুল ইসলাম', gender: 'পুরুষ', saf: 'OR', joiningPolice: '2020-11-01', joiningBandarban: '2023-08-12', mobile: '01933334455', district: 'ফেনী', spouseInfo: '', remark: '', designation: 'রিগুলার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
-                { bp: 'BP0020229922', rank: 'কনস্টেবল', brashNo: '4015', name: 'আরআই, বান্দরবান', gender: 'পুরুষ', saf: 'LOR', joiningPolice: '2021-01-10', joiningBandarban: '2024-01-05', mobile: '01544445566', district: 'বান্দরবান', spouseInfo: '', remark: '', designation: 'সহকারি মুন্সী', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'রিজার্ভ অফিস', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' }
-            ]);
+                { bp: 'BP0020229922', rank: 'কনস্টেবল', brashNo: '4015', name: 'আরআই, বান্দরবান', gender: 'পুরুষ', saf: 'LOR', joiningPolice: '2021-01-10', joiningBandarban: '2024-01-05', mobile: '01544445566', district: 'বান্দরবান', spouseInfo: '', remark: '', designation: 'সহকারি মুন্সী', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'রিজার্ভ অফিস', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229930', rank: 'কনস্টেবল', brashNo: '5011', name: 'আব্দুল করিম', gender: 'পুরুষ', saf: 'SAF', joiningPolice: '2019-03-10', joiningBandarban: '2022-05-11', mobile: '01722334455', district: 'সিলেট', spouseInfo: 'গৃহিণী', remark: '', designation: 'রিগুলার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229931', rank: 'নায়েক', brashNo: '5012', name: 'মোছাঃ সুমি আক্তার', gender: 'নারী', saf: 'OR', joiningPolice: '2018-06-15', joiningBandarban: '2022-08-20', mobile: '01833445566', district: 'ঢাকা', spouseInfo: 'চাকরিজীবী', remark: '', designation: 'রিগুলার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229932', rank: 'এসআই (নিরস্ত্র)', brashNo: '5013', name: 'কমল চন্দ্র দাস', gender: 'পুরুষ', saf: 'SAF', joiningPolice: '2016-01-12', joiningBandarban: '2021-11-05', mobile: '01944556677', district: 'চট্টগ্রাম', spouseInfo: 'ব্যাংকার', remark: '', designation: 'কম্পিউটার অপারেটর', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'ডিএসবি', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229933', rank: 'কনস্টেবল', brashNo: '5014', name: 'মোশাররফ হোসেন', gender: 'পুরুষ', saf: 'LOR', joiningPolice: '2021-09-10', joiningBandarban: '2023-02-14', mobile: '01655667788', district: 'কুমিল্লা', spouseInfo: '', remark: '', designation: 'ড্রাইভার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229934', rank: 'এএসআই (সশস্ত্র)', brashNo: '5015', name: 'নাসরিন সুলতানা', gender: 'নারী', saf: 'SAF', joiningPolice: '2017-04-18', joiningBandarban: '2022-07-25', mobile: '01566778899', district: 'ফেনী', spouseInfo: 'ব্যবসায়ী', remark: '', designation: 'মুন্সি', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'সদর থানা', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229935', rank: 'কনস্টেবল', brashNo: '5016', name: 'রিপন মিয়া', gender: 'পুরুষ', saf: 'OR', joiningPolice: '2022-01-05', joiningBandarban: '2024-03-01', mobile: '01777889900', district: 'রংপুর', spouseInfo: '', remark: '', designation: 'রিগুলার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229936', rank: 'এসআই (সশস্ত্র)', brashNo: '5017', name: 'প্রদীপ কুমার রায়', gender: 'পুরুষ', saf: 'SAF', joiningPolice: '2015-11-20', joiningBandarban: '2020-10-12', mobile: '01888990011', district: 'দিনাজপুর', spouseInfo: 'শিক্ষিকা', remark: '', designation: 'আরআই', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'অস্ত্রাগার', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229937', rank: 'কনস্টেবল', brashNo: '5018', name: 'জাহাঙ্গীর আলম', gender: 'পুরুষ', saf: 'LOR', joiningPolice: '2020-08-14', joiningBandarban: '2023-05-19', mobile: '01999001122', district: 'বগুড়া', spouseInfo: '', remark: '', designation: 'ইলেকট্রিশিয়ান', edits: { designation: 1, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229938', rank: 'নায়েক', brashNo: '5019', name: 'ফাতেমা বেগম', gender: 'নারী', saf: 'SAF', joiningPolice: '2018-12-01', joiningBandarban: '2022-09-09', mobile: '01611223344', district: 'বরিশাল', spouseInfo: 'চাকরিজীবী', remark: '', designation: 'রিগুলার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'পুলিশ লাইন', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' },
+                { bp: 'BP0120229939', rank: 'ইন্সপেক্টর (নিরস্ত্র)', brashNo: '5020', name: 'শফিকুল ইসলাম', gender: 'পুরুষ', saf: 'SAF', joiningPolice: '2010-05-05', joiningBandarban: '2021-01-10', mobile: '01522334455', district: 'ময়মনসিংহ', spouseInfo: 'গৃহিণী', remark: 'দায়িত্বপ্রাপ্ত কর্মকর্তা', designation: 'রিগুলার', edits: { designation: 0, saf: 0, spouse: 0, remark: 0 }, unit: 'ডিবি', dutyLeaveStatus: 'কর্মরত', unitStatus: 'কর্মরত' }
+            ];
+
+            state.force = getOrSeed(DB_KEYS.FORCE, initialForceSeed);
 
             state.notices = getOrSeed(DB_KEYS.NOTICES, [
                 { id: 1, startDate: '2026-02-01', endDate: '2026-12-31', description: 'সকল ফোর্স সদস্যদের নির্ধারিত সময়ে প্যারেডে অংশগ্রহণ নিশ্চিত করার নির্দেশ প্রদান করা হলো।', date: '2026-02-01', dateTime: '01/02/2026 09:30 AM', uploader: 'মোজাম্মেল হক (BP9818229921)' },
@@ -861,7 +886,6 @@
             });
         }
 
-        // PUBLIC NOTICE SLIDER
         function startNoticeSlider() {
             if (noticeSliderTimer) clearInterval(noticeSliderTimer);
             noticeSliderTimer = setInterval(() => {
@@ -922,7 +946,6 @@
             renderPublicNoticeSlider();
         }
 
-        // PUBLIC ALL NOTICES MODAL
         function openAllNoticesModal() {
             const tableBody = document.getElementById('publicNoticesTableBody');
             const sortedNotices = [...state.notices].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -948,7 +971,6 @@
             document.getElementById('allNoticesModal').classList.add('hidden');
         }
 
-        // AUTHENTICATION
         function openLoginModal() {
             document.getElementById('loginModal').classList.remove('hidden');
         }
@@ -1005,7 +1027,6 @@
             document.getElementById('preLoginView').classList.remove('hidden');
         }
 
-        // DASHBOARD CONTROL
         function setupUserDashboard() {
             document.getElementById('preLoginView').classList.add('hidden');
             document.getElementById('mainHeader').classList.remove('hidden');
@@ -1077,6 +1098,9 @@
         }
 
         function switchTab(tabId) {
+            if (activeTab === 'userList' && tabId !== 'userList') {
+                isUserListUnlocked = false;
+            }
             activeTab = tabId;
 
             document.querySelectorAll('#navTabsContainer button').forEach(btn => {
@@ -1170,6 +1194,14 @@
                                 <option value="নারী">নারী</option>
                             </select>
 
+                            <!-- SAF, OR, LOR Dropdown Filter -->
+                            <select id="safFilterDropdown" onchange="handleSafDropdownChange(this.value)" class="border p-1.5 rounded font-bold bg-amber-50 text-amber-900 border-amber-300">
+                                <option value="">মর্নিং রিপোর্ট ...</option>
+                                <option value="SAF">SAF রিপোর্ট দেখুন</option>
+                                <option value="OR">OR রিপোর্ট দেখুন</option>
+                                <option value="LOR">LOR রিপোর্ট দেখুন</option>
+                            </select>
+
                             <input type="text" id="searchBp" oninput="filterAllForceTable()" placeholder="BP দিয়ে খুঁজুন..." class="border p-1.5 rounded w-36">
 
                             <span class="bg-policeblue/10 text-policeblue font-bold px-2.5 py-1 rounded border border-policeblue/20">
@@ -1185,7 +1217,7 @@
                                 <i class="fa-solid fa-print"></i> প্রিন্ট/পিডিএফ
                             </button>
                             ${!isReadonly ? `
-                            <button onclick="openModal('forceAddModal')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3.5 py-1.5 rounded flex items-center gap-1 shadow">
+                            <button onclick="openModal('forceAddModal'); populateDistrictDropdowns();" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3.5 py-1.5 rounded flex items-center gap-1 shadow">
                                 <i class="fa-solid fa-user-plus"></i> ফোর্স এড
                             </button>
                             ` : ''}
@@ -1214,21 +1246,21 @@
                                     <th class="p-2 border border-slate-700">SL</th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('allForceTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('allForceTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700 col-target-3">BRASH NO</th>
+                                    <th class="p-2 border border-slate-700 col-target-3 cursor-pointer" onclick="sortTable('allForceTable', 3)">BRASH NO <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('allForceTable', 4)">NAME <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700 col-target-5">GENDER</th>
-                                    <th class="p-2 border border-slate-700 col-target-6">SAF</th>
-                                    <th class="p-2 border border-slate-700 col-target-7">JOINING POLICE</th>
-                                    <th class="p-2 border border-slate-700 col-target-8">JOINING BANDARBAN</th>
-                                    <th class="p-2 border border-slate-700 col-target-9">MOBILE</th>
-                                    <th class="p-2 border border-slate-700 col-target-10">DISTRICT</th>
-                                    <th class="p-2 border border-slate-700 col-target-11">SPOUSE INFO</th>
-                                    <th class="p-2 border border-slate-700 col-target-12">REMARK</th>
-                                    <th class="p-2 border border-slate-700 bg-policeblue/90">কর্মকাল (বান্দরবান)</th>
-                                    <th class="p-2 border border-slate-700 bg-policeblue/90">Unit</th>
-                                    <th class="p-2 border border-slate-700 bg-policeblue/90">Designation</th>
-                                    <th class="p-2 border border-slate-700 bg-policeblue/90">Duty/Leave</th>
-                                    <th class="p-2 border border-slate-700 bg-policeblue/90">Status</th>
+                                    <th class="p-2 border border-slate-700 col-target-5 cursor-pointer" onclick="sortTable('allForceTable', 5)">GENDER <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 col-target-6 cursor-pointer" onclick="sortTable('allForceTable', 6)">SAF <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 col-target-7 cursor-pointer" onclick="sortTable('allForceTable', 7)">JOINING POLICE <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 col-target-8 cursor-pointer" onclick="sortTable('allForceTable', 8)">JOINING BANDARBAN <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 col-target-9 cursor-pointer" onclick="sortTable('allForceTable', 9)">MOBILE <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 col-target-10 cursor-pointer" onclick="sortTable('allForceTable', 10)">DISTRICT <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 col-target-11 cursor-pointer" onclick="sortTable('allForceTable', 11)">SPOUSE INFO <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 col-target-12 cursor-pointer" onclick="sortTable('allForceTable', 12)">REMARK <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 bg-policeblue/90 cursor-pointer" onclick="sortTable('allForceTable', 13)">কর্মকাল (বান্দরবান) <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 bg-policeblue/90 cursor-pointer" onclick="sortTable('allForceTable', 14)">Unit <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 bg-policeblue/90 cursor-pointer" onclick="sortTable('allForceTable', 15)">Designation <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 bg-policeblue/90 cursor-pointer" onclick="sortTable('allForceTable', 16)">Duty/Leave <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 bg-policeblue/90 cursor-pointer" onclick="sortTable('allForceTable', 17)">Status <i class="fa-solid fa-sort"></i></th>
                                     ${!isReadonly ? `<th class="p-2 border border-slate-700 bg-amber-600 text-slate-950 font-bold no-print text-center">Action</th>` : ''}
                                 </tr>
                             </thead>
@@ -1241,6 +1273,76 @@
             `;
 
             renderForceTableRows();
+        }
+
+        function handleSafDropdownChange(val) {
+            if (!val) return;
+            renderSafSummaryModal(val);
+            document.getElementById('safFilterDropdown').value = "";
+        }
+
+        function renderSafSummaryModal(type) {
+            document.getElementById('safModalTitle').innerHTML = `<i class="fa-solid fa-chart-bar mr-1"></i> ${type} ক্যাটাগরি ভিত্তিক ইউনিট ও র‍্যাংক পরিসংখ্যান`;
+            
+            const filteredForce = state.force.filter(f => f.saf === type);
+            
+            const unitsSet = [...new Set(state.force.map(f => f.unit || 'পুলিশ লাইন'))];
+            const ranksSet = [...new Set(state.force.map(f => f.rank))];
+
+            let html = `
+                <div class="text-center border-b pb-3 mb-4">
+                    <h2 class="text-lg font-bold text-policeblue">পুলিশ লাইন বান্দরবান</h2>
+                    <h3 class="text-sm font-semibold text-slate-800">${type} ক্যাটাগরি ভিত্তিক ফোর্স শক্তি বিবরণী</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">রিপোর্ট তৈরির তারিখ: ${formatBnDate(new Date().toISOString().split('T')[0])}</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse border">
+                        <thead>
+                            <tr class="bg-slate-800 text-white">
+                                <th class="p-2 border">ইউনিট / কর্মস্থল</th>
+                                ${ranksSet.map(r => `<th class="p-2 border text-center">${r}</th>`).join('')}
+                                <th class="p-2 border text-center bg-policeblue">মোট</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            let grandTotal = 0;
+            const rankTotals = {};
+            ranksSet.forEach(r => rankTotals[r] = 0);
+
+            unitsSet.forEach(unit => {
+                let unitTotal = 0;
+                html += `<tr class="border-b"><td class="p-2 border font-bold text-policeblue">${escapeHtml(unit)}</td>`;
+                
+                ranksSet.forEach(rank => {
+                    const count = filteredForce.filter(f => (f.unit || 'পুলিশ লাইন') === unit && f.rank === rank).length;
+                    unitTotal += count;
+                    rankTotals[rank] += count;
+                    html += `<td class="p-2 border text-center font-semibold">${count > 0 ? toBengaliNumerals(count) : '-'}</td>`;
+                });
+
+                grandTotal += unitTotal;
+                html += `<td class="p-2 border text-center font-bold bg-slate-100">${toBengaliNumerals(unitTotal)}</td></tr>`;
+            });
+
+            html += `
+                        <tr class="bg-slate-100 font-bold border-t-2 border-slate-400">
+                            <td class="p-2 border text-right">সর্বমোট:</td>
+                            ${ranksSet.map(r => `<th class="p-2 border text-center">${rankTotals[r] > 0 ? toBengaliNumerals(rankTotals[r]) : '-'}</th>`).join('')}
+                            <td class="p-2 border text-center bg-amber-100 text-amber-900 text-sm">${toBengaliNumerals(grandTotal)}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-8 flex justify-between text-xs text-slate-700 font-semibold pt-6 border-t">
+                    <div class="text-center"><p class="border-t border-slate-400 pt-1">প্রস্তুতকারীর স্বাক্ষর</p></div>
+                    <div class="text-center"><p class="border-t border-slate-400 pt-1">আরআই, পুলিশ লাইন বান্দরবান</p></div>
+                </div>
+            `;
+
+            document.getElementById('safSummaryPrintDoc').innerHTML = html;
+            openModal('safSummaryModal');
         }
 
         function renderForceTableRows() {
@@ -1443,7 +1545,9 @@
                 state.transfers.filter(t => t.bp === bp && !t.departureDate).forEach(t => {
                     t.departureDate = date;
                     t.tenure = calculateDuration(t.startDate, date);
-                    t.status = 'সম্পন্ন';
+                    if (t.type === 'প্রেষণে') t.status = 'প্রেষণ সম্পন্ন';
+                    else if (t.type === 'অভ্যন্তরণী সংযুক্ত') t.status = 'সংযুক্ত সম্পন্ন';
+                    else t.status = 'বদলি সম্পন্ন';
                 });
                 state.guards.filter(g => g.bp === bp && !g.departureDate).forEach(g => {
                     g.departureDate = date;
@@ -1455,27 +1559,30 @@
                     const reason = document.getElementById('actionReason').value;
                     state.recycle.push({ ...member, deletedDate: date, reason, type: 'ডিলিটেড' });
                     state.force.splice(memberIdx, 1);
-                    addLog(`ফোর্স ডাটা ডিলিট করা হয়েছে: ${member.name}`);
+                    addLog(`ফোর্স ডাটা ডিলিট করা হয়েছে: ${member.name} (${member.bp})`);
                 } else if (action === 'EXTERNAL_DISTRICT') {
                     const unitName = document.getElementById('actionUnitText').value || 'বহিঃ জেলা';
                     state.recycle.push({ ...member, deletedDate: date, reason: `বহিঃ জেলা বদলি (${unitName})`, type: 'বহিঃ জেলা বদলি' });
                     state.force.splice(memberIdx, 1);
-                    addLog(`বহিঃ জেলা বদলি করা হয়েছে: ${member.name}`);
+                    addLog(`বহিঃ জেলা বদলি করা হয়েছে: ${member.name} (${member.bp})`);
                 } else if (action === 'EXTERNAL_DEPUTATION') {
                     const unitName = document.getElementById('actionUnitText').value;
                     state.transfers.push({ bp, rank: member.rank, brashNo: member.brashNo, name: member.name, type: 'প্রেষণে', unit: unitName, startDate: date, departureDate: '', tenure: '', status: 'কর্মরত' });
                     member.unit = unitName;
                     member.unitStatus = 'প্রেষণে';
+                    addLog(`প্রেষণে পদায়ন করা হয়েছে: ${member.name} (${member.bp}) -> ${unitName}`);
                 } else if (action === 'INTERNAL_TRANSFER' || action === 'INTERNAL_ATTACH') {
                     const unitName = document.getElementById('actionUnitSelect').value;
                     const typeStr = action === 'INTERNAL_TRANSFER' ? 'অভ্যন্তরীণ বদলি' : 'অভ্যন্তরণী সংযুক্ত';
                     state.transfers.push({ bp, rank: member.rank, brashNo: member.brashNo, name: member.name, type: typeStr, unit: unitName, startDate: date, departureDate: '', tenure: '', status: 'কর্মরত' });
                     member.unit = unitName;
                     member.unitStatus = typeStr;
+                    addLog(`${typeStr} করা হয়েছে: ${member.name} (${member.bp}) -> ${unitName}`);
                 } else if (action === 'GUARD_TRANSFER') {
                     const guardName = document.getElementById('actionUnitSelect').value;
                     state.guards.push({ bp, rank: member.rank, brashNo: member.brashNo, name: member.name, guardName, startDate: date, departureDate: '', tenure: '', status: 'গার্ড এ কর্মরত' });
                     member.unitStatus = `গার্ড (${guardName})`;
+                    addLog(`গার্ড ডিউটিতে পদায়ন করা হয়েছে: ${member.name} (${member.bp}) -> ${guardName}`);
                 }
 
                 saveState(DB_KEYS.FORCE);
@@ -1488,7 +1595,6 @@
             });
         }
 
-        // FIELD EDIT MODAL (APPROVAL SUBMISSION)
         function openFieldEditModal(bp, field) {
             const member = state.force.find(f => f.bp === bp);
             if (!member) return;
@@ -1557,16 +1663,27 @@
             alert("তথ্য পরিবর্তনের অনুরোধটি View ID এর এপ্রুভ ট্যাবে অনুমোদনের জন্য পাঠানো হয়েছে!");
         }
 
-        // TAB 2: TRANSFERS / DEPUTATION
+        // TAB 2: TRANSFERS
+        let activeTransferSubTab = 'working';
         function renderTransfersTab(container) {
             const today = new Date().toISOString().split('T')[0];
 
             container.innerHTML = `
                 <div class="space-y-4">
-                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
-                        <h3 class="text-sm md:text-base font-bold text-policeblue flex items-center gap-2">
-                            <i class="fa-solid fa-right-left"></i> বদলি / সংযুক্ত / প্রেষণ ডাটাবেজ
-                        </h3>
+                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-2">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-sm md:text-base font-bold text-policeblue"><i class="fa-solid fa-right-left"></i> বদলি / সংযুক্ত / প্রেষণ ডাটাবেজ</h3>
+                        </div>
+
+                        <div class="flex gap-1 bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+                            <button onclick="switchTransferSubTab('working')" class="px-3 py-1.5 rounded ${activeTransferSubTab === 'working' ? 'bg-policeblue text-white' : 'text-slate-600 hover:text-slate-900'}">
+                                কর্মরত (${toBengaliNumerals(state.transfers.filter(t => !t.departureDate).length)})
+                            </button>
+                            <button onclick="switchTransferSubTab('completed')" class="px-3 py-1.5 rounded ${activeTransferSubTab === 'completed' ? 'bg-policeblue text-white' : 'text-slate-600 hover:text-slate-900'}">
+                                বদলি/সংযুক্ত/প্রেষণ সম্পন্ন (${toBengaliNumerals(state.transfers.filter(t => t.departureDate).length)})
+                            </button>
+                        </div>
+
                         <div class="flex gap-2 text-xs">
                             <button onclick="exportTableToExcel('transfersTable', 'Transfers_Data')" class="bg-emerald-600 text-white px-3 py-1.5 rounded font-medium">Excel</button>
                             <button onclick="window.print()" class="bg-slate-700 text-white px-3 py-1.5 rounded font-medium">প্রিন্ট</button>
@@ -1581,43 +1698,58 @@
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 3)">NAME <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700">ধরন</th>
-                                    <th class="p-2 border border-slate-700">কর্মস্থল / Unit</th>
-                                    <th class="p-2 border border-slate-700">যোগদান তারিখ</th>
-                                    <th class="p-2 border border-slate-700">প্রস্থান তারিখ</th>
-                                    <th class="p-2 border border-slate-700">কর্মকাল</th>
-                                    <th class="p-2 border border-slate-700">Status</th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 4)">ধরন <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 5)">কর্মস্থল / Unit <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 6)">যোগদান তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 7)">প্রস্থান তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 8)">কর্মকাল <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('transfersTable', 9)">Status <i class="fa-solid fa-sort"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${state.transfers.length === 0 ? `<tr><td colspan="10" class="p-4 text-center text-slate-400">কোন বদলি/সংযুক্ত তথ্য পাওয়া যায়নি</td></tr>` : 
-                                state.transfers.map((t, idx) => {
-                                    const tenure = t.departureDate ? calculateDuration(t.startDate, t.departureDate) : calculateDuration(t.startDate, today);
-                                    const statusText = !t.departureDate ? 'কর্মরত' : 'বদলি/সংযুক্ত/প্রেষণ সম্পন্ন';
-                                    return `
-                                        <tr class="hover:bg-slate-50 border-b">
-                                            <td class="p-2 border text-center font-bold">${toBengaliNumerals(idx + 1)}</td>
-                                            <td class="p-2 border font-mono font-bold">${escapeHtml(t.bp)}</td>
-                                            <td class="p-2 border">${escapeHtml(t.rank)}</td>
-                                            <td class="p-2 border font-semibold">${escapeHtml(t.name)}</td>
-                                            <td class="p-2 border font-medium text-amber-700">${escapeHtml(t.type)}</td>
-                                            <td class="p-2 border font-bold text-policeblue">${escapeHtml(t.unit)}</td>
-                                            <td class="p-2 border">${formatBnDate(t.startDate)}</td>
-                                            <td class="p-2 border">${t.departureDate ? formatBnDate(t.departureDate) : '-'}</td>
-                                            <td class="p-2 border font-semibold">${tenure}</td>
-                                            <td class="p-2 border">
-                                                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${!t.departureDate ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">
-                                                    ${statusText}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    `;
-                                }).join('')}
+                                ${renderTransferRows(today)}
                             </tbody>
                         </table>
                     </div>
                 </div>
             `;
+        }
+
+        function switchTransferSubTab(sub) {
+            activeTransferSubTab = sub;
+            renderTabContent('transfers');
+        }
+
+        function renderTransferRows(today) {
+            const filtered = state.transfers.filter(t => activeTransferSubTab === 'working' ? !t.departureDate : t.departureDate);
+
+            if (filtered.length === 0) {
+                return `<tr><td colspan="10" class="p-4 text-center text-slate-400">কোন বদলি/সংযুক্ত/প্রেষণ ডাটা পাওয়া যায়নি</td></tr>`;
+            }
+
+            return filtered.map((t, idx) => {
+                const tenure = t.departureDate ? calculateDuration(t.startDate, t.departureDate) : calculateDuration(t.startDate, today);
+                const statusText = t.status || (!t.departureDate ? 'কর্মরত' : (t.type === 'প্রেষণে' ? 'প্রেষণ সম্পন্ন' : t.type === 'অভ্যন্তরণী সংযুক্ত' ? 'সংযুক্ত সম্পন্ন' : 'বদলি সম্পন্ন'));
+                
+                return `
+                    <tr class="hover:bg-slate-50 border-b">
+                        <td class="p-2 border text-center font-bold">${toBengaliNumerals(idx + 1)}</td>
+                        <td class="p-2 border font-mono font-bold">${escapeHtml(t.bp)}</td>
+                        <td class="p-2 border">${escapeHtml(t.rank)}</td>
+                        <td class="p-2 border font-semibold">${escapeHtml(t.name)}</td>
+                        <td class="p-2 border font-medium text-amber-700">${escapeHtml(t.type)}</td>
+                        <td class="p-2 border font-bold text-policeblue">${escapeHtml(t.unit)}</td>
+                        <td class="p-2 border">${formatBnDate(t.startDate)}</td>
+                        <td class="p-2 border">${t.departureDate ? formatBnDate(t.departureDate) : '-'}</td>
+                        <td class="p-2 border font-semibold">${tenure}</td>
+                        <td class="p-2 border">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-bold ${!t.departureDate ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">
+                                ${statusText}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         // TAB 3: GUARD DUTY
@@ -1658,11 +1790,11 @@
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 3)">NAME <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700">গার্ডের নাম</th>
-                                    <th class="p-2 border border-slate-700">যোগদান তারিখ</th>
-                                    <th class="p-2 border border-slate-700">প্রস্থান তারিখ</th>
-                                    <th class="p-2 border border-slate-700">কর্মকাল</th>
-                                    <th class="p-2 border border-slate-700">Status</th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 4)">গার্ডের নাম <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 5)">যোগদান তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 6)">প্রস্থান তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 7)">কর্মকাল <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('guardTable', 8)">Status <i class="fa-solid fa-sort"></i></th>
                                     ${currentUser.role === 'ADMIN' ? `<th class="p-2 border border-slate-700 text-center no-print">Action</th>` : ''}
                                 </tr>
                             </thead>
@@ -1734,7 +1866,8 @@
             }
         }
 
-        // TAB 4: LEAVE WITH TIME STAMPING
+        // TAB 4: LEAVE
+        let activeLeaveSubTab = 'active';
         function renderLeaveTab(container) {
             const today = new Date().toISOString().split('T')[0];
             const isReadonly = currentUser.role !== 'ADMIN';
@@ -1744,32 +1877,24 @@
                     <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-2">
                         <div class="flex items-center gap-3">
                             <h3 class="text-sm md:text-base font-bold text-policeblue"><i class="fa-solid fa-plane-departure"></i> ছুটি ডাটাবেজ</h3>
-                            <span class="text-xs bg-slate-100 border px-2.5 py-1 rounded-full font-bold">
-                                মোট ছুটি গমন: ${toBengaliNumerals(state.leaves.length)} টি
-                            </span>
+                        </div>
+
+                        <div class="flex gap-1 bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+                            <button onclick="switchLeaveSubTab('active')" class="px-3 py-1.5 rounded ${activeLeaveSubTab === 'active' ? 'bg-policeblue text-white' : 'text-slate-600 hover:text-slate-900'}">
+                                চলতি ছুটি (${toBengaliNumerals(state.leaves.filter(l => l.status !== 'হাজির').length)})
+                            </button>
+                            <button onclick="switchLeaveSubTab('previous')" class="px-3 py-1.5 rounded ${activeLeaveSubTab === 'previous' ? 'bg-policeblue text-white' : 'text-slate-600 hover:text-slate-900'}">
+                                পূর্বের ছুটি (${toBengaliNumerals(state.leaves.filter(l => l.status === 'হাজির').length)})
+                            </button>
                         </div>
 
                         <div class="flex flex-wrap gap-2 items-center text-xs">
-                            <select id="leaveFilterRank" onchange="filterLeaveTable()" class="border p-1.5 rounded">
-                                <option value="">সকল RANK</option>
-                                <option value="কনস্টেবল">কনস্টেবল</option>
-                                <option value="নায়েক">নায়েক</option>
-                                <option value="এসআই">এসআই</option>
-                            </select>
-
-                            <select id="leaveFilterType" onchange="filterLeaveTable()" class="border p-1.5 rounded">
-                                <option value="">সকল ছুটির ধরন</option>
-                                <option value="নৈমিত্তিক ছুটি">নৈমিত্তিক ছুটি</option>
-                                <option value="অর্জিত ছুটি">অর্জিত ছুটি</option>
-                            </select>
-
-                            <select id="leaveFilterStatus" onchange="filterLeaveTable()" class="border p-1.5 rounded">
-                                <option value="">সকল Status</option>
-                                <option value="ছুটিতে">ছুটিতে</option>
-                                <option value="অতিবাস">অতিবাস</option>
-                                <option value="হাজির">হাজির</option>
-                            </select>
-
+                            <button onclick="exportTableToExcel('leaveTable', 'Leave_Data')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded font-medium flex items-center gap-1">
+                                <i class="fa-solid fa-file-excel"></i> Excel
+                            </button>
+                            <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded font-medium flex items-center gap-1">
+                                <i class="fa-solid fa-print"></i> প্রিন্ট
+                            </button>
                             ${!isReadonly ? `
                             <button onclick="openLeaveModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1.5 rounded flex items-center gap-1 shadow">
                                 <i class="fa-solid fa-plus"></i> ছুটি গমন
@@ -1786,8 +1911,8 @@
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 3)">NAME <i class="fa-solid fa-sort"></i></th>
-                                    <th class="p-2 border border-slate-700">ছুটির ধরন</th>
-                                    <th class="p-2 border border-slate-700">দিন</th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 4)">ছুটির ধরন <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 5)">দিন <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 6)">প্রস্থান তারিখ ও সময় <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 7)">শেষ তারিখ <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('leaveTable', 8)">হাজির তারিখ ও সময় <i class="fa-solid fa-sort"></i></th>
@@ -1804,24 +1929,30 @@
             `;
         }
 
+        function switchLeaveSubTab(sub) {
+            activeLeaveSubTab = sub;
+            renderTabContent('leave');
+        }
+
         function renderLeaveRows(today, isReadonly) {
-            if (state.leaves.length === 0) {
+            const filteredLeaves = state.leaves.filter(l => activeLeaveSubTab === 'active' ? l.status !== 'হাজির' : l.status === 'হাজির');
+
+            if (filteredLeaves.length === 0) {
                 return `<tr><td colspan="11" class="p-4 text-center text-slate-400">কোন ছুটির রেকর্ড পাওয়া যায়নি</td></tr>`;
             }
 
-            return state.leaves.map((l, idx) => {
+            return filteredLeaves.map((l, idx) => {
                 const endDate = addDaysToDate(l.startDate, parseInt(l.days));
-                let status = 'ছুটিতে';
+                let status = l.status;
                 
-                if (l.returnDate) {
-                    status = 'হাজির';
-                } else if (today > endDate) {
-                    status = 'অতিবাস';
+                if (status !== 'হাজির') {
+                    if (today > endDate) status = 'অতিবাস';
+                    else status = 'ছুটিতে';
                 }
 
                 l.status = status;
                 const forceMember = state.force.find(f => f.bp === l.bp);
-                if (forceMember) {
+                if (forceMember && status !== 'হাজির') {
                     forceMember.dutyLeaveStatus = status;
                 }
 
@@ -1853,22 +1984,6 @@
                     </tr>
                 `;
             }).join('');
-        }
-
-        function filterLeaveTable() {
-            const rank = document.getElementById('leaveFilterRank').value.toLowerCase();
-            const type = document.getElementById('leaveFilterType').value.toLowerCase();
-            const status = document.getElementById('leaveFilterStatus').value.toLowerCase();
-
-            const rows = document.querySelectorAll('#leaveTableBody tr');
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                const rankMatch = !rank || text.includes(rank);
-                const typeMatch = !type || text.includes(type);
-                const statusMatch = !status || text.includes(status);
-
-                row.style.display = (rankMatch && typeMatch && statusMatch) ? '' : 'none';
-            });
         }
 
         function openLeaveModal() {
@@ -1919,10 +2034,9 @@
                 return;
             }
 
-            // Validation: Cannot add if active leave or if date falls inside existing leave history range
             const hasConflict = state.leaves.some(l => {
                 if (l.bp !== bp) return false;
-                if (l.status !== 'হাজির') return true; // Active leave or overstay
+                if (l.status !== 'হাজির') return true;
                 const endDate = addDaysToDate(l.startDate, l.days);
                 return (newStartDate >= l.startDate && newStartDate <= (l.returnDate || endDate));
             });
@@ -1952,13 +2066,13 @@
                 f.dutyLeaveStatus = 'ছুটিতে';
                 saveState(DB_KEYS.LEAVES);
                 saveState(DB_KEYS.FORCE);
-                addLog(`ছুটি এন্ট্রি করা হয়েছে: ${f.name} (${f.bp})`);
+                addLog(`ছুটি গমন এন্ট্রি করা হয়েছে: ${f.name} (${f.bp})`);
                 closeModal('leaveModal');
                 renderTabContent('leave');
             });
         }
 
-        // TAB 5: DUTY TAB
+        // TAB 5: DUTY
         let activeDutySubTab = 'eligible';
         function renderDutyTab(container) {
             const today = new Date().toISOString().split('T')[0];
@@ -2036,15 +2150,15 @@
                             <span class="text-slate-500">পুলিশ লাইন্সে উপস্থিত ফোর্সের নামসমূহ</span>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs border-collapse">
+                            <table id="eligibleTable" class="w-full text-left text-xs border-collapse">
                                 <thead>
                                     <tr class="bg-slate-100 text-slate-700 border-b">
                                         <th class="p-2 border">SL</th>
-                                        <th class="p-2 border">BP</th>
-                                        <th class="p-2 border">RANK</th>
-                                        <th class="p-2 border">NAME</th>
-                                        <th class="p-2 border">Unit</th>
-                                        <th class="p-2 border">Designation</th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('eligibleTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('eligibleTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('eligibleTable', 3)">NAME <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('eligibleTable', 4)">Unit <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('eligibleTable', 5)">Designation <i class="fa-solid fa-sort"></i></th>
                                         ${currentUser.role === 'ADMIN' ? `<th class="p-2 border text-center">Action</th>` : ''}
                                     </tr>
                                 </thead>
@@ -2089,14 +2203,14 @@
                             ডিউটি অযোগ্য ফোর্স তালিকা (মোট: ${toBengaliNumerals(ineligibleMembers.length)} জন)
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs border-collapse">
+                            <table id="ineligibleTable" class="w-full text-left text-xs border-collapse">
                                 <thead>
                                     <tr class="bg-slate-100 text-slate-700 border-b">
                                         <th class="p-2 border">SL</th>
-                                        <th class="p-2 border">BP</th>
-                                        <th class="p-2 border">NAME</th>
-                                        <th class="p-2 border">Unit</th>
-                                        <th class="p-2 border">অযোগ্যতার কারণ</th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('ineligibleTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('ineligibleTable', 2)">NAME <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('ineligibleTable', 3)">Unit <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border cursor-pointer" onclick="sortTable('ineligibleTable', 4)">অযোগ্যতার কারণ <i class="fa-solid fa-sort"></i></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2154,10 +2268,10 @@
                                         <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('dutySubTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
                                         <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('dutySubTable', 3)">NAME <i class="fa-solid fa-sort"></i></th>
                                         <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('dutySubTable', 4)">ডিউটি স্থল <i class="fa-solid fa-sort"></i></th>
-                                        <th class="p-2 border border-slate-700">ধরন</th>
+                                        <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('dutySubTable', 5)">ধরন <i class="fa-solid fa-sort"></i></th>
                                         <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('dutySubTable', 6)">ডিউটির তারিখ <i class="fa-solid fa-sort"></i></th>
-                                        <th class="p-2 border border-slate-700">হাজির তারিখ</th>
-                                        <th class="p-2 border border-slate-700">Status</th>
+                                        <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('dutySubTable', 7)">হাজির তারিখ <i class="fa-solid fa-sort"></i></th>
+                                        <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('dutySubTable', 8)">Status <i class="fa-solid fa-sort"></i></th>
                                         <th class="p-2 border border-slate-700 text-center no-print">Action</th>
                                     </tr>
                                 </thead>
@@ -2328,7 +2442,7 @@
                 f.dutyLeaveStatus = 'ডিউটিতে';
                 saveState(DB_KEYS.DUTIES);
                 saveState(DB_KEYS.FORCE);
-                addLog(`ডিউটি প্রদান করা হয়েছে: ${f.name} -> ${duty.place}`);
+                addLog(`ডিউটি প্রদান করা হয়েছে: ${f.name} (${f.bp}) -> স্থল: ${duty.place}`);
                 closeModal('dutyModal');
                 renderTabContent('duty');
             });
@@ -2346,7 +2460,7 @@
 
             state.dutyPlaces.push(place);
             saveState(DB_KEYS.DUTY_PLACES);
-            addLog(`নতুন ডিউটি স্থল যোগ করা হয়েছে: ${place}`);
+            addLog(`নতুন ডিউটি স্থল সংযোজন করা হয়েছে: ${place}`);
             closeModal('dutyPlaceModal');
             document.getElementById('newDutyPlaceInput').value = '';
             alert("নতুন ডিউটি স্থল সফলভাবে যোগ করা হয়েছে!");
@@ -2363,7 +2477,7 @@
                 }
                 saveState(DB_KEYS.DUTIES);
                 saveState(DB_KEYS.FORCE);
-                addLog(`ডিউটি ডিলিট করা হয়েছে: ${d.name}`);
+                addLog(`ডিউটি রেকর্ড ডিলিট করা হয়েছে: ${d.name} (${d.bp})`);
                 renderTabContent('duty');
             }
         }
@@ -2394,7 +2508,7 @@
                         if (f) f.dutyLeaveStatus = 'কর্মরত';
                         saveState(DB_KEYS.LEAVES);
                         saveState(DB_KEYS.FORCE);
-                        addLog(`ছুটি হতে হাজির গ্রহণ করা হয়েছে: ${l.name}`);
+                        addLog(`ছুটি হতে হাজির গ্রহণ করা হয়েছে: ${l.name} (${l.bp})`);
                     }
                 } else if (targetType === 'DUTY') {
                     const d = state.duties.find(x => x.id == recordId);
@@ -2405,7 +2519,7 @@
                         if (f) f.dutyLeaveStatus = 'কর্মরত';
                         saveState(DB_KEYS.DUTIES);
                         saveState(DB_KEYS.FORCE);
-                        addLog(`ডিউটি হতে হাজির গ্রহণ করা হয়েছে: ${d.name}`);
+                        addLog(`ডিউটি হতে হাজির গ্রহণ করা হয়েছে: ${d.name} (${d.bp})`);
                     }
                 }
 
@@ -2414,10 +2528,10 @@
             });
         }
 
-        // TAB 6: NOTICE TAB (STRICT DELETION VALIDATION)
+        // TAB 6: NOTICE
         let activeNoticeSubTab = 'addNotice';
         function renderNoticeTab(container) {
-            const canAdd = true; // All IDs can add notices
+            const canAdd = true;
 
             container.innerHTML = `
                 <div class="space-y-4">
@@ -2490,7 +2604,7 @@
                             ${state.notices.length === 0 ? `<p class="text-slate-400 text-xs text-center py-4">কোন নোটিশ প্রকাশিত নেই</p>` : 
                             state.notices.map(n => {
                                 const isPublisher = n.uploader.includes(currentUser.id);
-                                const isExpiredOrToday = today >= n.endDate; // Cannot delete if endDate > today unless Super Admin
+                                const isExpiredOrToday = today >= n.endDate;
                                 const canDelete = (isPublisher && isExpiredOrToday) || currentUser.role === 'SUPER_ADMIN';
 
                                 return `
@@ -2556,11 +2670,12 @@
             e.preventDefault();
             const now = new Date();
             const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const desc = document.getElementById('noticeDesc').value.trim();
             const notice = {
                 id: Date.now(),
                 startDate: document.getElementById('noticeStartDate').value,
                 endDate: document.getElementById('noticeEndDate').value,
-                description: document.getElementById('noticeDesc').value.trim(),
+                description: desc,
                 date: now.toISOString().split('T')[0],
                 dateTime: `${formatBnDate(now.toISOString().split('T')[0])} ${timeStr}`,
                 uploader: `${currentUser.name} (${currentUser.id})`
@@ -2569,7 +2684,7 @@
             showLoading("নোটিশ পোস্ট হচ্ছে...", () => {
                 state.notices.unshift(notice);
                 saveState(DB_KEYS.NOTICES);
-                addLog(`নতুন নোটিশ প্রকাশ করা হয়েছে।`);
+                addLog(`নতুন নোটিশ এড করা হয়েছে: "${desc.substring(0, 30)}..." (দাখিলকারী: ${currentUser.name} - ${currentUser.id})`);
                 renderPublicNoticeSlider();
                 renderTabContent('notice');
             });
@@ -2589,14 +2704,14 @@
 
                     saveState(DB_KEYS.NOTICES);
                     saveState(DB_KEYS.NOTICE_RECYCLE);
-                    addLog(`নোটিশ মুছে রিসাইকেল বিনে পাঠানো হয়েছে।`);
+                    addLog(`নোটিশ ডিলিট করা হয়েছে: "${notice.description.substring(0, 30)}..." (ডিলিটকারী ID: ${currentUser.id})`);
                     renderPublicNoticeSlider();
                     renderTabContent('notice');
                 });
             }
         }
 
-        // TAB 7: STATISTICS
+        // TAB 7: STATS
         function renderStatsTab(container) {
             const totalForce = state.force.length;
             const onLeave = state.leaves.filter(l => l.status === 'ছুটিতে' || l.status === 'অতিবাস').length;
@@ -2772,26 +2887,30 @@
         function renderRecycleTab(container) {
             container.innerHTML = `
                 <div class="space-y-4">
-                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                    <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center flex-wrap gap-2">
                         <h3 class="text-sm md:text-base font-bold text-red-700 flex items-center gap-2">
                             <i class="fa-solid fa-trash-arrow-up"></i> রিসাইকেল বিন ডাটাবেজ
                         </h3>
-                        <span class="text-xs bg-slate-100 border px-3 py-1 rounded-full font-bold">
-                            মোট সংরক্ষিত: ${toBengaliNumerals(state.recycle.length)} টি
-                        </span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs bg-slate-100 border px-3 py-1 rounded-full font-bold">
+                                মোট সংরক্ষিত: ${toBengaliNumerals(state.recycle.length)} টি
+                            </span>
+                            <button onclick="exportTableToExcel('recycleTable', 'Recycle_Bin_Data')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded text-xs font-medium"><i class="fa-solid fa-file-excel"></i> Excel</button>
+                            <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded text-xs font-medium"><i class="fa-solid fa-print"></i> প্রিন্ট</button>
+                        </div>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
+                        <table id="recycleTable" class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-800 text-white">
                                     <th class="p-2 border border-slate-700">SL</th>
-                                    <th class="p-2 border border-slate-700">BP</th>
-                                    <th class="p-2 border border-slate-700">RANK</th>
-                                    <th class="p-2 border border-slate-700">NAME</th>
-                                    <th class="p-2 border border-slate-700">ধরন</th>
-                                    <th class="p-2 border border-slate-700">তারিখ</th>
-                                    <th class="p-2 border border-slate-700">কারণ / মন্তব্য</th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('recycleTable', 1)">BP <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('recycleTable', 2)">RANK <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('recycleTable', 3)">NAME <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('recycleTable', 4)">ধরন <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('recycleTable', 5)">তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('recycleTable', 6)">কারণ / মন্তব্য <i class="fa-solid fa-sort"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2814,7 +2933,7 @@
             `;
         }
 
-        // TAB 9: NOTIFICATION TAB
+        // TAB 9: NOTIFICATIONS
         function renderNotificationsTab(container) {
             state.notifications.forEach(n => n.read = true);
             saveState(DB_KEYS.NOTIFICATIONS);
@@ -2853,7 +2972,7 @@
             renderTabContent('notifications');
         }
 
-        // TAB 10: APPROVALS TAB
+        // TAB 10: APPROVALS
         let activeApprovalSubTab = 'PENDING';
         function renderApprovalsTab(container) {
             container.innerHTML = `
@@ -2877,17 +2996,17 @@
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
+                        <table id="approvalsTable" class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-800 text-white">
                                     <th class="p-2 border border-slate-700">SL</th>
-                                    <th class="p-2 border border-slate-700">প্রেরণের তারিখ</th>
-                                    <th class="p-2 border border-slate-700">প্রেরক ID</th>
-                                    <th class="p-2 border border-slate-700">BP & নাম</th>
-                                    <th class="p-2 border border-slate-700">ক্ষেত্র (Field)</th>
-                                    <th class="p-2 border border-slate-700">পূর্বের মান</th>
-                                    <th class="p-2 border border-slate-700">নতুন মান</th>
-                                    <th class="p-2 border border-slate-700">অনুমোদন তারিখ/ID</th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('approvalsTable', 1)">প্রেরণের তারিখ <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('approvalsTable', 2)">প্রেরক ID <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('approvalsTable', 3)">BP & নাম <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('approvalsTable', 4)">ক্ষেত্র (Field) <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('approvalsTable', 5)">পূর্বের মান <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('approvalsTable', 6)">নতুন মান <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('approvalsTable', 7)">অনুমোদন তারিখ/ID <i class="fa-solid fa-sort"></i></th>
                                     ${activeApprovalSubTab === 'PENDING' ? `<th class="p-2 border border-slate-700 text-center">Action</th>` : ''}
                                 </tr>
                             </thead>
@@ -2964,12 +3083,12 @@
 
                 saveState(DB_KEYS.APPROVALS);
                 addNotification(`${req.name} (${req.bp}) এর ${req.field} পরিবর্তনের অনুরোধ View ID দ্বারা ${isApproved ? 'এপ্রুভ' : 'রিজেক্ট'} করা হয়েছে।`);
-                addLog(`View ID দ্বারা তথ্য পরিবর্তনের অনুরোধ ${isApproved ? 'অনুমোদন (Approved)' : 'বাতিল (Rejected)'} করা হয়েছে: ${req.name}`);
+                addLog(`View ID দ্বারা তথ্য পরিবর্তনের অনুরোধ ${isApproved ? 'অনুমোদন (Approved)' : 'বাতিল (Rejected)'} করা হয়েছে: ${req.name} (${req.bp})`);
                 renderTabContent('approvals');
             });
         }
 
-        // TAB 11: SYSTEM LOGS
+        // TAB 11: LOGS
         function renderLogsTab(container) {
             container.innerHTML = `
                 <div class="space-y-4">
@@ -2978,9 +3097,11 @@
                             <i class="fa-solid fa-list-check"></i> সিস্টেম একটিভিটি লগসমূহ (Logs)
                         </h3>
 
-                        <div class="flex gap-2 text-xs">
+                        <div class="flex flex-wrap gap-2 text-xs items-center">
                             <input type="text" id="logUserFilter" oninput="filterLogsTable()" placeholder="ব্যবহারকারী দিয়ে খুঁজুন..." class="border p-1.5 rounded">
                             <input type="text" id="logActionFilter" oninput="filterLogsTable()" placeholder="কার্যক্রম দিয়ে খুঁজুন..." class="border p-1.5 rounded">
+                            <button onclick="exportTableToExcel('logsTable', 'Activity_Logs')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded font-medium"><i class="fa-solid fa-file-excel"></i> Excel</button>
+                            <button onclick="window.print()" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded font-medium"><i class="fa-solid fa-print"></i> প্রিন্ট</button>
                         </div>
                     </div>
 
@@ -2988,9 +3109,9 @@
                         <table id="logsTable" class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-800 text-white">
-                                    <th class="p-2 border border-slate-700">সময়</th>
-                                    <th class="p-2 border border-slate-700">ব্যবহারকারী</th>
-                                    <th class="p-2 border border-slate-700">কার্যক্রম বিবরণ</th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('logsTable', 0)">সময় <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('logsTable', 1)">ব্যবহারকারী <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('logsTable', 2)">কার্যক্রম বিবরণ <i class="fa-solid fa-sort"></i></th>
                                 </tr>
                             </thead>
                             <tbody id="logsTableBody">
@@ -3021,7 +3142,7 @@
             });
         }
 
-        // TAB 12: USER LIST TAB (SUPER ADMIN PIN RESTRICTED)
+        // TAB 12: USER LIST
         function renderUserListTab(container) {
             if (!isUserListUnlocked) {
                 container.innerHTML = `
@@ -3032,7 +3153,7 @@
                         <h3 class="text-base font-bold text-slate-800">User List অ্যাক্সেস পিন কোড যাচাইকরণ</h3>
                         <p class="text-slate-500">ইউজার তালিকা পরিচালনা করতে পিন পাসওয়ার্ড প্রদান করুন:</p>
                         <form onsubmit="verifyUserListPin(event)" class="space-y-3">
-                            <input type="password" id="userListPinInput" required placeholder="পিন পাসওয়ার্ড দেন" class="w-full border rounded p-2 text-center text-sm font-mono focus:ring-1 focus:ring-policeblue">
+                            <input type="password" id="userListPinInput" required placeholder="পিন পাসওয়ার্ড দেন (12345)" class="w-full border rounded p-2 text-center text-sm font-mono focus:ring-1 focus:ring-policeblue">
                             <button type="submit" class="w-full bg-policeblue text-white font-bold py-2 rounded shadow">
                                 আনলক করুন
                             </button>
@@ -3054,14 +3175,14 @@
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
+                        <table id="userTable" class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-slate-800 text-white">
                                     <th class="p-2 border border-slate-700">SL</th>
-                                    <th class="p-2 border border-slate-700">ইউজার ID (BP)</th>
-                                    <th class="p-2 border border-slate-700">পাসওয়ার্ড</th>
-                                    <th class="p-2 border border-slate-700">ব্যবহারকারীর নাম</th>
-                                    <th class="p-2 border border-slate-700">রোল (Role)</th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('userTable', 1)">ইউজার ID (BP) <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('userTable', 2)">পাসওয়ার্ড <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('userTable', 3)">ব্যবহারকারীর নাম <i class="fa-solid fa-sort"></i></th>
+                                    <th class="p-2 border border-slate-700 cursor-pointer" onclick="sortTable('userTable', 4)">রোল (Role) <i class="fa-solid fa-sort"></i></th>
                                     <th class="p-2 border border-slate-700 text-center">Action</th>
                                 </tr>
                             </thead>
@@ -3179,7 +3300,6 @@
             });
         }
 
-        // DUTY PDF PRINT / REPORT GENERATION
         function openDutySummaryPrint() {
             document.getElementById('printFilterDate').value = new Date().toISOString().split('T')[0];
             
@@ -3296,7 +3416,6 @@
             container.innerHTML = html;
         }
 
-        // UTILITY FUNCTIONS
         function showLoading(text, callback) {
             const overlay = document.getElementById('loadingOverlay');
             document.getElementById('loadingText').textContent = text || 'প্রসেসিং হচ্ছে...';
@@ -3382,12 +3501,19 @@
                 .replace(/"/g, '&quot;');
         }
 
+        // Toggle Ascending/Descending sorting state per table and column
+        const sortDirections = {};
         function sortTable(tableId, colIndex) {
             const table = document.getElementById(tableId);
             if (!table) return;
-            let rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            
+            const sortKey = `${tableId}_${colIndex}`;
+            const currentDir = sortDirections[sortKey] || 'asc';
+            const dir = currentDir === 'asc' ? 'desc' : 'asc';
+            sortDirections[sortKey] = dir;
+
+            let rows, switching, i, x, y, shouldSwitch, switchcount = 0;
             switching = true;
-            dir = "asc";
 
             while (switching) {
                 switching = false;
@@ -3398,8 +3524,10 @@
                     y = rows[i + 1].getElementsByTagName("TD")[colIndex];
                     if (!x || !y) continue;
 
-                    let xVal = x.innerText.toLowerCase();
-                    let yVal = y.innerText.toLowerCase();
+                    let xVal = x.innerText.trim().toLowerCase();
+                    let yVal = y.innerText.trim().toLowerCase();
+
+                    (isNaN(xVal) || isNaN(yVal)) ? null : (xVal = Number(xVal), yVal = Number(yVal));
 
                     if (dir === "asc") {
                         if (xVal > yVal) {
@@ -3417,11 +3545,6 @@
                     rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
                     switching = true;
                     switchcount++;
-                } else {
-                    if (switchcount === 0 && dir === "asc") {
-                        dir = "desc";
-                        switching = true;
-                    }
                 }
             }
         }
